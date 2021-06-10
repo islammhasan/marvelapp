@@ -1,11 +1,11 @@
 import React from 'react';
 import {Text} from 'react-native';
-import {Container} from './src/components/';
+import {CharacterCard, Container} from './src/components/';
 
 const App = () => {
   return (
     <Container>
-      <Text>Hello marvelapp!</Text>
+      <CharacterCard />
     </Container>
   );
 };

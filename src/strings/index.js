@@ -1,1 +1,3 @@
-export const strings = {};
+export const strings = {
+  characterName: 'Default Character',
+};
