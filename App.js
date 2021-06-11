@@ -1,6 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {
+  BackButton,
   CharacterCard,
   ComicsCard,
   Container,
@@ -18,6 +19,8 @@ const App = () => {
       <SearchInput placeholder="Search for a character..." />
       <View style={{height: 30}}></View>
       <ComicsCard onPress={() => alert('comics card!')} />
+      <View style={{height: 30}}></View>
+      <BackButton onPress={() => alert('back button!')} />
     </Container>
   );
 };
