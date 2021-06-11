@@ -4,24 +4,31 @@ import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 import {colors} from '../../assets/colors';
 import {strings} from '../../strings';
 import {images} from '../../assets/images';
+import {BlurView} from '@react-native-community/blur';
 
 export const CharacterCard = ({charName, onPress, img}) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.9}
-      style={styles.container}>
-      <Image
-        source={img || images.placeholder}
-        resizeMode={'cover'}
-        style={styles.imgStyle}
-      />
-      <View style={styles.titleContainer}>
-        <Text numberOfLines={1} style={styles.titleStyle}>
-          {charName || strings.characterName}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        onPress={onPress}
+        activeOpacity={0.9}
+        style={styles.container}>
+        <Image
+          source={img || images.placeholder}
+          resizeMode={'cover'}
+          style={styles.imgStyle}
+        />
+        <BlurView
+          blurType="light"
+          blurAmount={10}
+          reducedTransparencyFallbackColor="white"
+          style={styles.titleContainer}>
+          <Text numberOfLines={1} style={styles.titleStyle}>
+            {charName || strings.characterName}
+          </Text>
+        </BlurView>
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -39,11 +46,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: scale(320),
     height: verticalScale(30),
-    backgroundColor: colors.gray,
-    opacity: 0.8,
+    maxHeight: verticalScale(30),
     position: 'absolute',
     bottom: 0,
+    left: 0,
+    right: 0,
     zIndex: 2,
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   titleStyle: {
     color: colors.white,
