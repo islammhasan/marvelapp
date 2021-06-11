@@ -2,6 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {
   CharacterCard,
+  ComicsCard,
   Container,
   SearchCard,
   SearchInput,
@@ -14,7 +15,9 @@ const App = () => {
       <View style={{height: 30}}></View>
       <SearchCard onPress={() => alert('search card!')} />
       <View style={{height: 30}}></View>
-      <SearchInput placeholder='Search for a character...' />
+      <SearchInput placeholder="Search for a character..." />
+      <View style={{height: 30}}></View>
+      <ComicsCard onPress={() => alert('comics card!')} />
     </Container>
   );
 };
