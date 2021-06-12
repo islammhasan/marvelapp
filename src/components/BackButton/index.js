@@ -4,12 +4,12 @@ import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {colors} from '../../assets/colors';
 import {icons} from '../../assets/icons';
 
-export const BackButton = ({onPress}) => {
+export const BackButton = ({onPress, style}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={styles.container}>
+      style={[styles.container, style]}>
       <Image style={styles.iconStyle} source={icons.back} />
     </TouchableOpacity>
   );
@@ -24,11 +24,11 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: moderateScale(50),
     justifyContent: 'center',
     alignItems: 'center',
+    opacity: 0.8,
   },
   iconStyle: {
     width: scale(15),
     height: verticalScale(15),
     tintColor: colors.white,
-    opacity: 0.8,
   },
 });

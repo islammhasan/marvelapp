@@ -1,8 +1,8 @@
 import React from 'react';
-import {Search} from './src/screens/';
+import {CharacterDetails} from './src/screens/';
 
 const App = () => {
-  return <Search />;
+  return <CharacterDetails />;
 };
 
 export default App;

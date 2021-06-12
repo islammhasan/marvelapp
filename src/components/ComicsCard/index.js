@@ -7,10 +7,7 @@ import {strings} from '../../strings';
 
 export const ComicsCard = ({img, title, onPress}) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.9}
-      style={styles.container}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
       <Image style={styles.imgStyle} source={img || images.placeholder} />
       <Text numberOfLines={2} style={styles.titleStyle}>
         {title || strings.comicTitle}
@@ -20,14 +17,9 @@ export const ComicsCard = ({img, title, onPress}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: scale(100),
-    height: verticalScale(180),
-    alignItems: 'center',
-  },
   imgStyle: {
     width: scale(100),
-    height: verticalScale(140),
+    height: verticalScale(150),
     borderRadius: moderateScale(10),
   },
   titleStyle: {
