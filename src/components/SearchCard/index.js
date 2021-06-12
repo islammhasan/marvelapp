@@ -4,8 +4,9 @@ import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import {colors} from '../../assets/colors';
 import {images} from '../../assets/images';
 import {strings} from '../../strings';
+import Highlighter from 'react-native-highlight-words';
 
-export const SearchCard = ({onPress, charName, img}) => {
+export const SearchCard = ({onPress, charName, img, highlight}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -16,9 +17,13 @@ export const SearchCard = ({onPress, charName, img}) => {
         style={styles.imgStyle}
         source={img || images.placeholder}
       />
-      <Text numberOfLines={2} style={styles.txtStyle}>
-        {charName || strings.characterName}
-      </Text>
+      <Highlighter
+        numberOfLines={2}
+        highlightStyle={{backgroundColor: colors.red}}
+        searchWords={[highlight]}
+        style={styles.txtStyle}
+        textToHighlight={charName || strings.characterName}
+      />
     </TouchableOpacity>
   );
 };

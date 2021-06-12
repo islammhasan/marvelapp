@@ -21,13 +21,20 @@ export const SearchInput = props => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: verticalScale(50),
+    height: verticalScale(60),
     width: scale(260),
-    borderWidth: scale(1),
-    borderRadius: moderateScale(25),
+    borderRadius: moderateScale(20),
     paddingHorizontal: scale(15),
     borderColor: colors.searchbar,
     alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: scale(0),
+      height: verticalScale(0),
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: moderateScale(10),
+    elevation: 3,
   },
   textInputStyle: {
     fontSize: moderateScale(14),

@@ -12,6 +12,7 @@
   "dependencies": {
     "react": "17.0.1",
     "react-native": "0.64.2",
+    "react-native-highlight-words": "^1.0.1",
     "react-native-size-matters": "^0.4.0"
   },
   "devDependencies": {

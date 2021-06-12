@@ -1,8 +1,8 @@
 import React from 'react';
-import {Home} from './src/screens/';
+import {Search} from './src/screens/';
 
 const App = () => {
-  return <Home />;
+  return <Search />;
 };
 
 export default App;

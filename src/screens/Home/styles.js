@@ -35,9 +35,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: verticalScale(15),
   },
-  itemStyle: {
-    marginBottom: verticalScale(15),
-  },
   itemSeparator: {
     height: verticalScale(15),
   },
