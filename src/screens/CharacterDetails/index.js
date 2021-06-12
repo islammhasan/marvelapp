@@ -5,7 +5,8 @@ import {BackButton, ComicsCard, Container} from '../../components';
 import {strings} from '../../strings';
 import {styles} from './styles';
 
-export const CharacterDetails = () => {
+export const CharacterDetails = ({navigation, route}) => {
+  const {id, title, image, description} = route.params;
   const renderItem = ({item}) => {
     return (
       <ComicsCard
@@ -24,20 +25,19 @@ export const CharacterDetails = () => {
         contentContainerStyle={styles.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
         <View style={styles.imgContainer}>
-          <Image
-            resizeMode="cover"
-            style={styles.imgStyle}
-            source={images.background}
+          <Image resizeMode="cover" style={styles.imgStyle} source={image} />
+          <BackButton
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}
           />
-          <BackButton onPress={() => alert('back!')} style={styles.backBtn} />
         </View>
         <Text numberOfLines={2} style={styles.charNameStyle}>
-          {strings.characterName}
+          {title}
         </Text>
         <Text numberOfLines={1} style={styles.descTitleStyle}>
           {strings.descTitle}
         </Text>
-        <Text style={styles.descStyle}>{strings.desc}</Text>
+        <Text style={styles.descStyle}>{description}</Text>
         <Text style={styles.descTitleStyle}>{strings.comics}</Text>
         <FlatList
           data={DATA}

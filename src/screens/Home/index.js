@@ -3,15 +3,24 @@ import {View, TouchableOpacity, Image, FlatList} from 'react-native';
 import {icons} from '../../assets/icons';
 import {images} from '../../assets/images';
 import {CharacterCard, Container} from '../../components';
+import {strings} from '../../strings';
 import {styles} from './styles';
 
-export const Home = () => {
+export const Home = ({navigation}) => {
   const renderItem = ({item}) => {
+    const {id, title, image, description} = item;
     return (
       <CharacterCard
-        onPress={() => alert(item.title)}
-        charName={item.title}
-        img={item.image}
+        onPress={() =>
+          navigation.navigate('CharacterDetails', {
+            id,
+            title,
+            image,
+            description,
+          })
+        }
+        charName={title}
+        img={image}
       />
     );
   };
@@ -29,7 +38,7 @@ export const Home = () => {
         />
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => alert('search!')}
+          onPress={() => navigation.navigate('Search')}
           style={styles.searchIconContainer}>
           <Image
             resizeMode="contain"
@@ -54,26 +63,31 @@ const DATA = [
   {
     id: '311',
     title: '3-D Man',
+    description: strings.desc,
     image: images.placeholder,
   },
   {
     id: '4124',
     title: 'A-Bomb (HAS)',
+    description: strings.desc,
     image: images.placeholder,
   },
   {
     id: '121',
     title: 'A.I.M',
+    description: strings.desc,
     image: images.placeholder,
   },
   {
     id: '511',
     title: 'Abomination',
+    description: strings.desc,
     image: images.placeholder,
   },
   {
     id: '212',
     title: 'Abomination',
+    description: strings.desc,
     image: images.placeholder,
   },
 ];

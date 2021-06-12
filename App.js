@@ -1,8 +1,8 @@
 import React from 'react';
-import {CharacterDetails} from './src/screens/';
+import {NavContainer} from './src/navigation';
 
 const App = () => {
-  return <CharacterDetails />;
+  return <NavContainer />;
 };
 
 export default App;

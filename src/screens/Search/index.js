@@ -4,7 +4,7 @@ import {images} from '../../assets/images';
 import {Container, SearchCard, SearchInput} from '../../components';
 import {styles} from './styles';
 
-export const Search = () => {
+export const Search = ({navigation}) => {
   const [term, setTerm] = useState('');
   const [result, setResult] = useState([]);
 
@@ -39,7 +39,7 @@ export const Search = () => {
         />
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => alert('go back!')}
+          onPress={() => navigation.goBack()}
           style={styles.cancelContainerStyle}>
           <Text style={styles.cancelTxtStyle}>Cancel</Text>
         </TouchableOpacity>
