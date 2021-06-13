@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Text,
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
@@ -32,6 +33,12 @@ export const Home = ({navigation}) => {
     setIsLoading(true);
     fetchCharacter();
   }, [currentLimit]);
+
+  const tryAgain = () => {
+    setIsLoading(true);
+    fetchCharacter();
+  };
+
   const fetchCharacter = async () => {
     try {
       const hash = 'ea5b40862f00541b17718c8026ea6743';
@@ -47,10 +54,11 @@ export const Home = ({navigation}) => {
           },
         },
       );
-      setCharList(response.data.data.results);
+      setCharList(response.data?.data?.results);
       setIsLoading(false);
     } catch (err) {
-      console.log(err);
+      console.log('error==>', err);
+      setIsLoading(false);
     }
   };
 
@@ -128,17 +136,26 @@ export const Home = ({navigation}) => {
         backgroundColor={colors.gray}
       />
       <View style={styles.headerExtension}></View>
-      <FlatList
-        data={charList}
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={itemSeparator}
-        contentContainerStyle={styles.charListStyle}
-        keyExtractor={item => item.id?.toString()}
-        renderItem={renderItem}
-        ListFooterComponent={footerLoader}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0}
-      />
+      {charList.length < 1 && isLoading == false ? (
+        <>
+          <Text style={styles.errorTxt}>Something went wrong!</Text>
+          <TouchableOpacity style={styles.errorBtn} onPress={tryAgain}>
+            <Text style={styles.errorBtnTxt}>Try Again</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <FlatList
+          data={charList}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={itemSeparator}
+          contentContainerStyle={styles.charListStyle}
+          keyExtractor={item => item.id?.toString()}
+          renderItem={renderItem}
+          ListFooterComponent={footerLoader}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0}
+        />
+      )}
     </Container>
   );
 };

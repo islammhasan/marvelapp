@@ -39,4 +39,25 @@ export const styles = StyleSheet.create({
   loaderStyle: {
     marginTop: verticalScale(10),
   },
+  errorTxt: {
+    color: colors.white,
+    fontSize: moderateScale(18),
+    alignSelf: 'center',
+    marginTop: verticalScale(50),
+  },
+  errorBtn: {
+    backgroundColor: colors.red,
+    width: scale(100),
+    height: verticalScale(30),
+    marginTop: verticalScale(20),
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: moderateScale(20),
+  },
+  errorBtnTxt: {
+    color: colors.white,
+    fontSize: moderateScale(15),
+    fontWeight: '700',
+  },
 });
