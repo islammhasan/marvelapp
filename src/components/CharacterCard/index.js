@@ -28,7 +28,7 @@ export const CharacterCard = ({charName, onPress, img, style}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: verticalScale(110),
+    height: verticalScale(120),
     width: scale(320),
     borderRadius: 25,
     justifyContent: 'flex-start',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: scale(320),
-    height: verticalScale(30),
+    height: verticalScale(35),
     position: 'absolute',
     bottom: 0,
     zIndex: 2,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   imgStyle: {
-    height: verticalScale(120),
+    height: verticalScale(170),
     width: scale(320),
   },
 });

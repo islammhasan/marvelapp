@@ -1,33 +1,85 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, FlatList, StatusBar} from 'react-native';
+import axios from 'axios';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  StatusBar,
+} from 'react-native';
 import {colors} from '../../assets/colors';
-import {images} from '../../assets/images';
 import {Container, SearchCard, SearchInput} from '../../components';
 import {styles} from './styles';
 
 export const Search = ({navigation}) => {
   const [term, setTerm] = useState('');
   const [result, setResult] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    fetchResults();
+  }, [term]);
+
+  const fetchResults = async () => {
+    try {
+      if (term != '') {
+        setIsLoading(true);
+        const hash = 'ea5b40862f00541b17718c8026ea6743';
+        const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
+        const response = await axios.get(
+          `https://gateway.marvel.com/v1/public/characters`,
+          {
+            params: {
+              ts: 1,
+              apikey: publicKey,
+              hash: hash,
+              limit: 10,
+              nameStartsWith: term,
+            },
+          },
+        );
+        setResult(response.data?.data?.results);
+        setIsLoading(false);
+      } else {
+        setResult([]);
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.log('error==>', err);
+    }
+  };
 
   const renderItem = ({item}) => {
-    return <SearchCard highlight={term} img={item.img} charName={item.title} />;
+    const {id, name, description} = item;
+    const {path, extension} = item.thumbnail;
+    const img = `${path}.${extension}`;
+    return (
+      <SearchCard
+        onPress={() =>
+          navigation.navigate('CharacterDetails', {id, name, description, img})
+        }
+        highlight={term}
+        img={img}
+        charName={name}
+      />
+    );
   };
 
   const itemSeparator = () => {
     return <View style={styles.itemSeparator}></View>;
   };
 
-  const termChange = term => {
-    if (term != '') {
-      setTerm(term);
-      const newRes = res.filter(item =>
-        item.title.toLowerCase().includes(term.toLowerCase()),
-      );
-      setResult(newRes);
-    } else {
-      setTerm('');
-      setResult([]);
-    }
+  const footerLoader = () => {
+    return (
+      isLoading && (
+        <ActivityIndicator
+          size="large"
+          color={colors.red}
+          style={styles.loaderStyle}
+        />
+      )
+    );
   };
 
   return (
@@ -36,7 +88,7 @@ export const Search = ({navigation}) => {
       <View style={styles.searchContainer}>
         <SearchInput
           value={term}
-          onChangeText={term => termChange(term)}
+          onChangeText={term => setTerm(term)}
           placeholder="Search for a character..."
         />
         <TouchableOpacity
@@ -53,30 +105,8 @@ export const Search = ({navigation}) => {
         contentContainerStyle={styles.listStyle}
         renderItem={renderItem}
         ItemSeparatorComponent={itemSeparator}
+        ListFooterComponent={footerLoader}
       />
     </Container>
   );
 };
-
-const res = [
-  {
-    id: '311',
-    title: '3-D Man',
-    image: images.placeholder,
-  },
-  {
-    id: '4124',
-    title: 'A-Bomb (HAS)',
-    image: images.placeholder,
-  },
-  {
-    id: '121',
-    title: 'A.I.M',
-    image: images.placeholder,
-  },
-  {
-    id: '511',
-    title: 'Abomination',
-    image: images.placeholder,
-  },
-];

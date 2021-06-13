@@ -15,7 +15,7 @@ export const SearchCard = ({onPress, charName, img, highlight}) => {
       <Image
         resizeMode="cover"
         style={styles.imgStyle}
-        source={img || images.placeholder}
+        source={{uri: `${img}`} || images.placeholder}
       />
       <Highlighter
         numberOfLines={2}
