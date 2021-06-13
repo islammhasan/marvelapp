@@ -7,7 +7,7 @@ export const navigationOptions = {
   headerBackTitleVisible: false,
   headerTintColor: colors.black,
   headerStyle: {
-    height: verticalScale(70),
+    height: verticalScale(80),
     borderBottomWidth: 0,
     borderBottomColor: 'transparent',
     shadowColor: 'transparent',

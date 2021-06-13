@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: scale(15),
-    marginTop: verticalScale(20),
+    marginTop: verticalScale(40),
   },
   cancelContainerStyle: {
     flex: 1,

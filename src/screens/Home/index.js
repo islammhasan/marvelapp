@@ -1,26 +1,100 @@
-import React from 'react';
-import {View, TouchableOpacity, Image, FlatList} from 'react-native';
+import axios from 'axios';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ActivityIndicator,
+  StatusBar,
+} from 'react-native';
+import {colors} from '../../assets/colors';
 import {icons} from '../../assets/icons';
 import {images} from '../../assets/images';
 import {CharacterCard, Container} from '../../components';
-import {strings} from '../../strings';
 import {styles} from './styles';
 
 export const Home = ({navigation}) => {
+  const [charList, setCharList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentLimit, setCurrentLimit] = useState(10);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerTitle: headerlogo,
+      headerTitleAlign: 'center',
+      headerRight: headerSearchIcon,
+    });
+  }, [navigation]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchCharacter();
+  }, [currentLimit]);
+  const fetchCharacter = async () => {
+    try {
+      const hash = 'ea5b40862f00541b17718c8026ea6743';
+      const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
+      const response = await axios.get(
+        `https://gateway.marvel.com/v1/public/characters`,
+        {
+          params: {
+            ts: 1,
+            apikey: publicKey,
+            hash: hash,
+            limit: currentLimit,
+          },
+        },
+      );
+      setCharList(response.data.data.results);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const headerlogo = () => {
+    return (
+      <Image
+        resizeMode="contain"
+        style={styles.logoStyle}
+        source={images.logo}
+      />
+    );
+  };
+
+  const headerSearchIcon = () => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => navigation.navigate('Search')}
+        style={styles.searchIconContainer}>
+        <Image
+          resizeMode="contain"
+          style={styles.searchIconStyle}
+          source={icons.search}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   const renderItem = ({item}) => {
-    const {id, title, image, description} = item;
+    const {id, name, description} = item;
+    const {path, extension} = item.thumbnail;
+    const img = `${path}.${extension}`;
     return (
       <CharacterCard
         onPress={() =>
           navigation.navigate('CharacterDetails', {
             id,
-            title,
-            image,
+            name,
+            img,
             description,
           })
         }
-        charName={title}
-        img={image}
+        charName={name}
+        img={img}
       />
     );
   };
@@ -28,66 +102,43 @@ export const Home = ({navigation}) => {
   const itemSeparator = () => {
     return <View style={styles.itemSeparator}></View>;
   };
+
+  const footerLoader = () => {
+    return (
+      isLoading && (
+        <ActivityIndicator
+          size="large"
+          color={colors.red}
+          style={styles.loaderStyle}
+        />
+      )
+    );
+  };
+
+  const loadMore = () => {
+    setCurrentLimit(currentLimit + 10);
+    setIsLoading(true);
+  };
+
   return (
     <Container>
-      <View style={styles.headerContainerStyle}>
-        <Image
-          resizeMode="contain"
-          style={styles.logoStyle}
-          source={images.logo}
-        />
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate('Search')}
-          style={styles.searchIconContainer}>
-          <Image
-            resizeMode="contain"
-            style={styles.searchIconStyle}
-            source={icons.search}
-          />
-        </TouchableOpacity>
-      </View>
+      <StatusBar
+        translucent
+        barStyle="light-content"
+        backgroundColor={colors.gray}
+      />
+      <View style={styles.headerExtension}></View>
       <FlatList
-        data={DATA}
+        data={charList}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={itemSeparator}
         contentContainerStyle={styles.charListStyle}
         keyExtractor={item => item.id?.toString()}
         renderItem={renderItem}
+        ListFooterComponent={footerLoader}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0}
       />
     </Container>
   );
 };
-
-const DATA = [
-  {
-    id: '311',
-    title: '3-D Man',
-    description: strings.desc,
-    image: images.placeholder,
-  },
-  {
-    id: '4124',
-    title: 'A-Bomb (HAS)',
-    description: strings.desc,
-    image: images.placeholder,
-  },
-  {
-    id: '121',
-    title: 'A.I.M',
-    description: strings.desc,
-    image: images.placeholder,
-  },
-  {
-    id: '511',
-    title: 'Abomination',
-    description: strings.desc,
-    image: images.placeholder,
-  },
-  {
-    id: '212',
-    title: 'Abomination',
-    description: strings.desc,
-    image: images.placeholder,
-  },
-];

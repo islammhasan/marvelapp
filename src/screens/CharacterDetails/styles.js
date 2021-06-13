@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   backBtn: {
     position: 'absolute',
-    top: verticalScale(30),
+    top: verticalScale(40),
   },
   charNameStyle: {
     fontSize: moderateScale(25),

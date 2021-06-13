@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, StatusBar} from 'react-native';
+import {colors} from '../../assets/colors';
 import {images} from '../../assets/images';
 import {Container, SearchCard, SearchInput} from '../../components';
 import {styles} from './styles';
@@ -31,6 +32,7 @@ export const Search = ({navigation}) => {
 
   return (
     <Container>
+      <StatusBar barStyle="light-content" backgroundColor={colors.black} />
       <View style={styles.searchContainer}>
         <SearchInput
           value={term}

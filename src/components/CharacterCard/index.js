@@ -12,8 +12,9 @@ export const CharacterCard = ({charName, onPress, img, style}) => {
       activeOpacity={0.9}
       style={[styles.container, style]}>
       <Image
-        source={img || images.placeholder}
-        resizeMode={'cover'}
+        source={{uri: `${img}`} || images.placeholder}
+        resizeMode="cover"
+        resizeMethod="scale"
         style={styles.imgStyle}
       />
       <View style={styles.titleContainer}>
@@ -30,8 +31,8 @@ const styles = StyleSheet.create({
     height: verticalScale(110),
     width: scale(320),
     borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     overflow: 'hidden',
   },
   titleContainer: {

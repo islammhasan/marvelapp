@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, Image, FlatList, ScrollView} from 'react-native';
+import {View, Text, Image, FlatList, ScrollView, StatusBar} from 'react-native';
 import {images} from '../../assets/images';
 import {BackButton, ComicsCard, Container} from '../../components';
 import {strings} from '../../strings';
 import {styles} from './styles';
 
 export const CharacterDetails = ({navigation, route}) => {
-  const {id, title, image, description} = route.params;
+  const {id, name, img, description} = route.params;
   const renderItem = ({item}) => {
     return (
       <ComicsCard
@@ -21,23 +21,34 @@ export const CharacterDetails = ({navigation, route}) => {
   };
   return (
     <Container>
+      <StatusBar
+        translucent
+        barStyle="light-content"
+        backgroundColor="transparent"
+      />
       <ScrollView
         contentContainerStyle={styles.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
         <View style={styles.imgContainer}>
-          <Image resizeMode="cover" style={styles.imgStyle} source={image} />
+          <Image
+            resizeMode="cover"
+            style={styles.imgStyle}
+            source={{uri: `${img}`}}
+          />
           <BackButton
             onPress={() => navigation.goBack()}
             style={styles.backBtn}
           />
         </View>
         <Text numberOfLines={2} style={styles.charNameStyle}>
-          {title}
+          {name}
         </Text>
         <Text numberOfLines={1} style={styles.descTitleStyle}>
           {strings.descTitle}
         </Text>
-        <Text style={styles.descStyle}>{description}</Text>
+        <Text style={styles.descStyle}>
+          {description ? description : 'No description'}
+        </Text>
         <Text style={styles.descTitleStyle}>{strings.comics}</Text>
         <FlatList
           data={DATA}
