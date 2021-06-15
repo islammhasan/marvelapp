@@ -6,7 +6,6 @@ import {
   Image,
   FlatList,
   ScrollView,
-  StatusBar,
   ActivityIndicator,
 } from 'react-native';
 import {colors} from '../../assets/colors';
@@ -141,12 +140,7 @@ export const CharacterDetails = ({navigation, route}) => {
     return <View style={styles.comicSeparatorStyle}></View>;
   };
   return (
-    <Container>
-      <StatusBar
-        translucent
-        barStyle="light-content"
-        backgroundColor="transparent"
-      />
+    <Container statusBarTranslucent statusBarColor="transparent">
       <View style={styles.imgContainer}>
         <Image
           resizeMode="cover"

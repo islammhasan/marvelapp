@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
-  StatusBar,
 } from 'react-native';
 import {colors} from '../../assets/colors';
 import {Container, SearchCard, SearchInput} from '../../components';
@@ -76,8 +75,7 @@ export const Search = ({navigation}) => {
   };
 
   return (
-    <Container>
-      <StatusBar barStyle="light-content" backgroundColor={colors.black} />
+    <Container statusBarColor={colors.black}>
       <View style={styles.searchContainer}>
         <SearchInput
           value={term}

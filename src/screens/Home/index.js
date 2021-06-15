@@ -7,7 +7,6 @@ import {
   FlatList,
   Text,
   ActivityIndicator,
-  StatusBar,
 } from 'react-native';
 import {colors} from '../../assets/colors';
 import {icons} from '../../assets/icons';
@@ -129,12 +128,7 @@ export const Home = ({navigation}) => {
   };
 
   return (
-    <Container>
-      <StatusBar
-        translucent
-        barStyle="light-content"
-        backgroundColor={colors.gray}
-      />
+    <Container statusBarTranslucent>
       <View style={styles.headerExtension}></View>
       {charList.length < 1 && isLoading == false ? (
         <>
