@@ -3,9 +3,10 @@ import {Text, FlatList, StyleSheet, View} from 'react-native';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {colors} from '../../assets/colors';
 import {ComicsCard} from '../ComicsCard';
+import {LoadingIndicator} from '../LoadingIndicator';
 
 export const HorizontalList = props => {
-  const {data, sectionTitle} = props;
+  const {data, sectionTitle, listLoading} = props;
   const renderItem = ({item}) => {
     const {title} = item;
     return (
@@ -26,7 +27,12 @@ export const HorizontalList = props => {
   };
   return (
     <>
-      <Text style={styles.titleStyle}>{sectionTitle}</Text>
+      <View style={styles.titleContainerStyle}>
+        <Text style={styles.titleStyle}>{sectionTitle}</Text>
+        {listLoading && (
+          <LoadingIndicator style={styles.indicatorStyle} size={'small'} />
+        )}
+      </View>
       <FlatList
         data={data}
         horizontal
@@ -43,11 +49,18 @@ export const HorizontalList = props => {
 };
 
 const styles = StyleSheet.create({
+  titleContainerStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: verticalScale(25),
+  },
   titleStyle: {
     fontSize: moderateScale(16),
     color: colors.lightred,
-    marginTop: verticalScale(25),
     marginHorizontal: scale(20),
+  },
+  indicatorStyle: {
+    marginTop: 0,
   },
   listStyle: {
     paddingStart: scale(20),

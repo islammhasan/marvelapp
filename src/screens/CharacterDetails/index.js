@@ -22,6 +22,10 @@ export const CharacterDetails = ({navigation, route}) => {
   const [eventsLimit, setEventsLimit] = useState(4);
   const [seriesLimit, setSeriesLimit] = useState(4);
   const [storiesLimit, setStoriesLimit] = useState(4);
+  const [comicsListLoading, setComicsListLoading] = useState(false);
+  const [eventsListLoading, setEventsListLoading] = useState(false);
+  const [seriesListLoading, setSeriesListLoading] = useState(false);
+  const [storiesListLoading, setStoriesListLoading] = useState(false);
 
   useEffect(() => {
     initialFetch();
@@ -64,9 +68,11 @@ export const CharacterDetails = ({navigation, route}) => {
       });
       setComicsList(response.data?.data?.results);
       setIsLoading(false);
+      setComicsListLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
+      setComicsListLoading(false);
       setComicsList([]);
     }
   };
@@ -82,10 +88,12 @@ export const CharacterDetails = ({navigation, route}) => {
         },
       });
       setEventsList(response.data?.data?.results);
+      setEventsListLoading(false);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
+      setEventsListLoading(false);
       setEventsList([]);
     }
   };
@@ -101,10 +109,12 @@ export const CharacterDetails = ({navigation, route}) => {
         },
       });
       setSeriesList(response.data?.data?.results);
+      setSeriesListLoading(false);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
+      setSeriesListLoading(false);
       setSeriesList([]);
     }
   };
@@ -121,10 +131,28 @@ export const CharacterDetails = ({navigation, route}) => {
       });
       setStoriesList(response.data?.data?.results);
       setIsLoading(false);
+      setStoriesListLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
+      setStoriesListLoading(false);
       setStoriesList([]);
+    }
+  };
+
+  const updateListLimit = (comics, events, series, stories) => {
+    if (comics & (comicsList.length > 3)) {
+      setComicsListLoading(true);
+      setComicsLimit(comicsLimit + 4);
+    } else if (events & (eventsList.length > 3)) {
+      setEventsListLoading(true);
+      setEventsLimit(eventsLimit + 4);
+    } else if (series & (seriesList.length > 3)) {
+      setSeriesListLoading(true);
+      setSeriesLimit(seriesLimit + 4);
+    } else if (stories & (storiesList.length > 3)) {
+      setStoriesListLoading(true);
+      setStoriesLimit(storiesLimit + 4);
     }
   };
 
@@ -158,28 +186,32 @@ export const CharacterDetails = ({navigation, route}) => {
           <HorizontalList
             sectionTitle={strings.comics}
             data={comicsList}
-            onEndReached={() => setComicsLimit(comicsLimit + 4)}
+            listLoading={comicsListLoading}
+            onEndReached={() => updateListLimit(true, false, false, false)}
           />
         )}
         {eventsList.length > 0 && (
           <HorizontalList
             sectionTitle={strings.events}
             data={eventsList}
-            onEndReached={() => setEventsLimit(eventsLimit + 4)}
+            listLoading={eventsListLoading}
+            onEndReached={() => updateListLimit(false, true, false, false)}
           />
         )}
         {seriesList.length > 0 && (
           <HorizontalList
             sectionTitle={strings.series}
             data={seriesList}
-            onEndReached={() => setSeriesLimit(seriesLimit + 4)}
+            listLoading={seriesListLoading}
+            onEndReached={() => updateListLimit(false, false, true, false)}
           />
         )}
         {storiesList.length > 0 && (
           <HorizontalList
             sectionTitle={strings.stories}
             data={storiesList}
-            onEndReached={() => setStoriesLimit(storiesLimit + 4)}
+            listLoading={storiesListLoading}
+            onEndReached={() => updateListLimit(false, false, false, true)}
           />
         )}
       </ScrollView>
