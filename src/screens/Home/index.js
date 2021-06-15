@@ -1,17 +1,9 @@
 import axios from 'axios';
 import React, {useEffect, useState, useLayoutEffect} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
-import {colors} from '../../assets/colors';
+import {View, TouchableOpacity, Image, FlatList, Text} from 'react-native';
 import {icons} from '../../assets/icons';
 import {images} from '../../assets/images';
-import {CharacterCard, Container} from '../../components';
+import {CharacterCard, Container, LoadingIndicator} from '../../components';
 import {styles} from './styles';
 
 export const Home = ({navigation}) => {
@@ -111,15 +103,7 @@ export const Home = ({navigation}) => {
   };
 
   const footerLoader = () => {
-    return (
-      isLoading && (
-        <ActivityIndicator
-          size="large"
-          color={colors.red}
-          style={styles.loaderStyle}
-        />
-      )
-    );
+    return isLoading && <LoadingIndicator />;
   };
 
   const loadMore = () => {

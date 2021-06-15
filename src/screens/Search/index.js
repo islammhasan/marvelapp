@@ -1,14 +1,13 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList} from 'react-native';
 import {colors} from '../../assets/colors';
-import {Container, SearchCard, SearchInput} from '../../components';
+import {
+  Container,
+  LoadingIndicator,
+  SearchCard,
+  SearchInput,
+} from '../../components';
 import {styles} from './styles';
 
 export const Search = ({navigation}) => {
@@ -71,7 +70,7 @@ export const Search = ({navigation}) => {
   };
 
   const footerLoader = () => {
-    return isLoading && <ActivityIndicator size="large" color={colors.red} />;
+    return isLoading && <LoadingIndicator />;
   };
 
   return (

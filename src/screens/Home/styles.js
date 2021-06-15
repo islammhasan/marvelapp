@@ -36,9 +36,6 @@ export const styles = StyleSheet.create({
   itemSeparator: {
     height: verticalScale(15),
   },
-  loaderStyle: {
-    marginTop: verticalScale(10),
-  },
   errorTxt: {
     color: colors.white,
     fontSize: moderateScale(18),

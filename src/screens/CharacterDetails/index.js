@@ -1,15 +1,12 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
+import {View, Text, Image, FlatList, ScrollView} from 'react-native';
 import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
-import {colors} from '../../assets/colors';
-import {BackButton, ComicsCard, Container} from '../../components';
+  BackButton,
+  ComicsCard,
+  Container,
+  LoadingIndicator,
+} from '../../components';
 import {strings} from '../../strings';
 import {styles} from './styles';
 
@@ -164,13 +161,7 @@ export const CharacterDetails = ({navigation, route}) => {
         <Text style={styles.descStyle}>
           {description ? description : 'No description'}
         </Text>
-        {isLoading && (
-          <ActivityIndicator
-            size="large"
-            color={colors.red}
-            style={styles.loaderStyle}
-          />
-        )}
+        {isLoading && <LoadingIndicator style={styles.loaderStyle} />}
         {comicsList.length > 0 && (
           <>
             <Text style={styles.descTitleStyle}>{strings.comics}</Text>
