@@ -16,14 +16,15 @@ export const Search = ({navigation}) => {
   const [term, setTerm] = useState('');
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentLimit, setCurrentLimit] = useState(10);
 
   useEffect(() => {
     fetchResults();
-  }, [term]);
+  }, [currentLimit, term]);
 
   const fetchResults = async () => {
     try {
-      if (term != '') {
+      if (Boolean(term)) {
         setIsLoading(true);
         const hash = 'ea5b40862f00541b17718c8026ea6743';
         const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
@@ -34,7 +35,7 @@ export const Search = ({navigation}) => {
               ts: 1,
               apikey: publicKey,
               hash: hash,
-              limit: 10,
+              limit: currentLimit,
               nameStartsWith: term,
             },
           },
@@ -71,15 +72,7 @@ export const Search = ({navigation}) => {
   };
 
   const footerLoader = () => {
-    return (
-      isLoading && (
-        <ActivityIndicator
-          size="large"
-          color={colors.red}
-          style={styles.loaderStyle}
-        />
-      )
-    );
+    return isLoading && <ActivityIndicator size="large" color={colors.red} />;
   };
 
   return (
@@ -106,6 +99,8 @@ export const Search = ({navigation}) => {
         renderItem={renderItem}
         ItemSeparatorComponent={itemSeparator}
         ListFooterComponent={footerLoader}
+        onEndReached={() => setCurrentLimit(currentLimit + 10)}
+        onEndReachedThreshold={0}
       />
     </Container>
   );

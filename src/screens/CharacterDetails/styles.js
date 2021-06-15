@@ -48,4 +48,7 @@ export const styles = StyleSheet.create({
   comicSeparatorStyle: {
     width: scale(10),
   },
+  loaderStyle: {
+    marginTop: verticalScale(50),
+  },
 });
