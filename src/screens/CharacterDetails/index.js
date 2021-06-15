@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, FlatList, ScrollView} from 'react-native';
+import {View, Text, Image, ScrollView} from 'react-native';
 import {
   BackButton,
-  ComicsCard,
   Container,
+  HorizontalList,
   LoadingIndicator,
 } from '../../components';
 import {strings} from '../../strings';
 import {styles} from './styles';
+import {baseUrl, apikey, hash, ts} from '../../services/';
 
 export const CharacterDetails = ({navigation, route}) => {
   const {id, name, img, description} = route.params;
@@ -23,119 +24,110 @@ export const CharacterDetails = ({navigation, route}) => {
   const [storiesLimit, setStoriesLimit] = useState(4);
 
   useEffect(() => {
-    setIsLoading(true);
+    initialFetch();
+  }, []);
+
+  useEffect(() => {
     fetchComics();
+  }, [comicsLimit]);
+
+  useEffect(() => {
     fetchEvents();
+  }, [eventsLimit]);
+
+  useEffect(() => {
     fetchSeries();
+  }, [seriesLimit]);
+
+  useEffect(() => {
     fetchStoires();
-  }, [comicsLimit || eventsLimit || seriesLimit || storiesLimit]);
+  }, [storiesLimit]);
+
+  const initialFetch = async () => {
+    setIsLoading(true);
+    await fetchComics();
+    await fetchEvents();
+    await fetchSeries();
+    await fetchStoires();
+    setIsLoading(false);
+  };
 
   const fetchComics = async () => {
     try {
-      const hash = 'ea5b40862f00541b17718c8026ea6743';
-      const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
-      const response = await axios.get(
-        `https://gateway.marvel.com:443/v1/public/characters/${id}/comics`,
-        {
-          params: {
-            ts: 1,
-            apikey: publicKey,
-            hash: hash,
-            limit: comicsLimit,
-          },
+      const response = await axios.get(`${baseUrl}/characters/${id}/comics`, {
+        params: {
+          ts,
+          apikey,
+          hash,
+          limit: comicsLimit,
         },
-      );
+      });
       setComicsList(response.data?.data?.results);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
+      setIsLoading(false);
+      setComicsList([]);
     }
   };
 
   const fetchEvents = async () => {
     try {
-      const hash = 'ea5b40862f00541b17718c8026ea6743';
-      const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
-      const response = await axios.get(
-        `https://gateway.marvel.com:443/v1/public/characters/${id}/events`,
-        {
-          params: {
-            ts: 1,
-            apikey: publicKey,
-            hash: hash,
-            limit: eventsLimit,
-          },
+      const response = await axios.get(`${baseUrl}/characters/${id}/events`, {
+        params: {
+          ts,
+          apikey,
+          hash,
+          limit: eventsLimit,
         },
-      );
+      });
       setEventsList(response.data?.data?.results);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
+      setIsLoading(false);
+      setEventsList([]);
     }
   };
 
   const fetchSeries = async () => {
     try {
-      const hash = 'ea5b40862f00541b17718c8026ea6743';
-      const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
-      const response = await axios.get(
-        `https://gateway.marvel.com:443/v1/public/characters/${id}/series`,
-        {
-          params: {
-            ts: 1,
-            apikey: publicKey,
-            hash: hash,
-            limit: seriesLimit,
-          },
+      const response = await axios.get(`${baseUrl}/characters/${id}/series`, {
+        params: {
+          ts,
+          apikey,
+          hash,
+          limit: seriesLimit,
         },
-      );
+      });
       setSeriesList(response.data?.data?.results);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
+      setIsLoading(false);
+      setSeriesList([]);
     }
   };
 
   const fetchStoires = async () => {
     try {
-      const hash = 'ea5b40862f00541b17718c8026ea6743';
-      const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
-      const response = await axios.get(
-        `https://gateway.marvel.com:443/v1/public/characters/${id}/stories`,
-        {
-          params: {
-            ts: 1,
-            apikey: publicKey,
-            hash: hash,
-            limit: storiesLimit,
-          },
+      const response = await axios.get(`${baseUrl}/characters/${id}/stories`, {
+        params: {
+          ts,
+          apikey,
+          hash,
+          limit: storiesLimit,
         },
-      );
+      });
       setStoriesList(response.data?.data?.results);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
+      setIsLoading(false);
+      setStoriesList([]);
     }
   };
 
-  const renderItem = ({item}) => {
-    const {title} = item;
-    return (
-      <ComicsCard
-        onPress={() => alert(title)}
-        img={
-          item.thumbnail == null
-            ? null
-            : item?.thumbnail?.path + '.' + item?.thumbnail?.extension
-        }
-        title={title == null ? null : title}
-      />
-    );
-  };
-
-  const itemSeparator = () => {
-    return <View style={styles.comicSeparatorStyle}></View>;
-  };
   return (
     <Container statusBarTranslucent statusBarColor="transparent">
       <View style={styles.imgContainer}>
@@ -163,68 +155,32 @@ export const CharacterDetails = ({navigation, route}) => {
         </Text>
         {isLoading && <LoadingIndicator style={styles.loaderStyle} />}
         {comicsList.length > 0 && (
-          <>
-            <Text style={styles.descTitleStyle}>{strings.comics}</Text>
-            <FlatList
-              data={comicsList}
-              horizontal
-              ItemSeparatorComponent={itemSeparator}
-              contentContainerStyle={styles.comicsListStyle}
-              keyExtractor={item => item.id}
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItem}
-              onEndReached={() => setComicsLimit(comicsLimit + 4)}
-              onEndReachedThreshold={0}
-            />
-          </>
+          <HorizontalList
+            sectionTitle={strings.comics}
+            data={comicsList}
+            onEndReached={() => setComicsLimit(comicsLimit + 4)}
+          />
         )}
         {eventsList.length > 0 && (
-          <>
-            <Text style={styles.descTitleStyle}>{strings.events}</Text>
-            <FlatList
-              data={eventsList}
-              horizontal
-              ItemSeparatorComponent={itemSeparator}
-              contentContainerStyle={styles.comicsListStyle}
-              keyExtractor={item => item.id}
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItem}
-              onEndReached={() => setEventsLimit(eventsLimit + 4)}
-              onEndReachedThreshold={0}
-            />
-          </>
+          <HorizontalList
+            sectionTitle={strings.events}
+            data={eventsList}
+            onEndReached={() => setEventsLimit(eventsLimit + 4)}
+          />
         )}
         {seriesList.length > 0 && (
-          <>
-            <Text style={styles.descTitleStyle}>{strings.series}</Text>
-            <FlatList
-              data={seriesList}
-              horizontal
-              ItemSeparatorComponent={itemSeparator}
-              contentContainerStyle={styles.comicsListStyle}
-              keyExtractor={item => item.id}
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItem}
-              onEndReached={() => setSeriesLimit(seriesLimit + 4)}
-              onEndReachedThreshold={0}
-            />
-          </>
+          <HorizontalList
+            sectionTitle={strings.series}
+            data={seriesList}
+            onEndReached={() => setSeriesLimit(seriesLimit + 4)}
+          />
         )}
         {storiesList.length > 0 && (
-          <>
-            <Text style={styles.descTitleStyle}>{strings.stories}</Text>
-            <FlatList
-              data={storiesList}
-              horizontal
-              ItemSeparatorComponent={itemSeparator}
-              contentContainerStyle={styles.comicsListStyle}
-              keyExtractor={item => item.id}
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItem}
-              onEndReached={() => setStoriesLimit(storiesLimit + 4)}
-              onEndReachedThreshold={0}
-            />
-          </>
+          <HorizontalList
+            sectionTitle={strings.stories}
+            data={storiesList}
+            onEndReached={() => setStoriesLimit(storiesLimit + 4)}
+          />
         )}
       </ScrollView>
     </Container>

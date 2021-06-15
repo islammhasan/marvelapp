@@ -5,6 +5,7 @@ import {icons} from '../../assets/icons';
 import {images} from '../../assets/images';
 import {CharacterCard, Container, LoadingIndicator} from '../../components';
 import {styles} from './styles';
+import {baseUrl, apikey, hash, ts} from '../../services';
 
 export const Home = ({navigation}) => {
   const [charList, setCharList] = useState([]);
@@ -32,24 +33,20 @@ export const Home = ({navigation}) => {
 
   const fetchCharacter = async () => {
     try {
-      const hash = 'ea5b40862f00541b17718c8026ea6743';
-      const publicKey = '78bc643001f53e9f0a393a71b14f2c00';
-      const response = await axios.get(
-        `https://gateway.marvel.com/v1/public/characters`,
-        {
-          params: {
-            ts: 1,
-            apikey: publicKey,
-            hash: hash,
-            limit: currentLimit,
-          },
+      const response = await axios.get(`${baseUrl}/characters`, {
+        params: {
+          ts,
+          apikey,
+          hash,
+          limit: currentLimit,
         },
-      );
+      });
       setCharList(response.data?.data?.results);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
+      setCharList([]);
     }
   };
 

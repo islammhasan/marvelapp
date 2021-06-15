@@ -41,13 +41,6 @@ export const styles = StyleSheet.create({
     marginTop: verticalScale(5),
     marginHorizontal: scale(20),
   },
-  comicsListStyle: {
-    paddingStart: scale(20),
-    marginTop: verticalScale(15),
-  },
-  comicSeparatorStyle: {
-    width: scale(10),
-  },
   loaderStyle: {
     marginTop: verticalScale(50),
   },
