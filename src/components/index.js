@@ -6,3 +6,4 @@ export * from './ComicsCard';
 export * from './BackButton';
 export * from './LoadingIndicator';
 export * from './HorizontalList';
+export * from './ImageZoomModal';

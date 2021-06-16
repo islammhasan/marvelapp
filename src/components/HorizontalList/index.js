@@ -1,22 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, FlatList, StyleSheet, View} from 'react-native';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {colors} from '../../assets/colors';
-import {ComicsCard} from '../ComicsCard';
-import {LoadingIndicator} from '../LoadingIndicator';
+import {ComicsCard, ImageZoomModal, LoadingIndicator} from '..';
 
 export const HorizontalList = props => {
   const {data, sectionTitle, listLoading} = props;
+  const [showZoomModal, setShowZoomModal] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(null);
+
   const renderItem = ({item}) => {
     const {title} = item;
+    const image =
+      item.thumbnail == null
+        ? null
+        : item?.thumbnail?.path + '.' + item?.thumbnail?.extension;
     return (
       <ComicsCard
-        onPress={() => alert(title)}
-        img={
-          item.thumbnail == null
-            ? null
-            : item?.thumbnail?.path + '.' + item?.thumbnail?.extension
-        }
+        onPress={() => {
+          setSelectedImg(image);
+          setShowZoomModal(true);
+        }}
+        img={image}
         title={title == null ? null : title}
       />
     );
@@ -25,6 +30,7 @@ export const HorizontalList = props => {
   const itemSeparator = () => {
     return <View style={styles.separatorStyle}></View>;
   };
+
   return (
     <>
       <View style={styles.titleContainerStyle}>
@@ -43,6 +49,11 @@ export const HorizontalList = props => {
         renderItem={renderItem}
         onEndReachedThreshold={0.7}
         {...props}
+      />
+      <ImageZoomModal
+        isVisible={showZoomModal}
+        onClose={() => setShowZoomModal(false)}
+        img={selectedImg}
       />
     </>
   );
