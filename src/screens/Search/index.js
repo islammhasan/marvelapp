@@ -1,6 +1,6 @@
-import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
 import {colors} from '../../assets/colors';
 import {
   Container,
@@ -8,14 +8,15 @@ import {
   SearchCard,
   SearchInput,
 } from '../../components';
+import {useMainFetch} from '../../redux/main';
 import {styles} from './styles';
-import {baseUrl, apikey, hash, ts} from '../../services';
 
 export const Search = ({navigation}) => {
   const [term, setTerm] = useState('');
-  const [result, setResult] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [currentLimit, setCurrentLimit] = useState(10);
+  const {searchCharacters} = useMainFetch();
+  const loading = useSelector(state => state.main.searchLoading);
+  const result = useSelector(state => state.main.searchList);
 
   useEffect(() => {
     fetchResults();
@@ -24,21 +25,7 @@ export const Search = ({navigation}) => {
   const fetchResults = async () => {
     try {
       if (Boolean(term)) {
-        setIsLoading(true);
-        const response = await axios.get(`${baseUrl}/characters`, {
-          params: {
-            ts,
-            apikey,
-            hash,
-            limit: currentLimit,
-            nameStartsWith: term,
-          },
-        });
-        setResult(response.data?.data?.results);
-        setIsLoading(false);
-      } else {
-        setResult([]);
-        setIsLoading(false);
+        await searchCharacters(currentLimit, term);
       }
     } catch (err) {
       console.log('error==>', err);
@@ -46,17 +33,14 @@ export const Search = ({navigation}) => {
   };
 
   const renderItem = ({item}) => {
-    const {id, name, description} = item;
-    const {path, extension} = item.thumbnail;
+    const {name, thumbnail} = item;
+    const {path, extension} = thumbnail;
     const img = `${path}.${extension}`;
     return (
       <SearchCard
-        onPress={() =>
-          navigation.navigate('CharacterDetails', {id, name, description, img})
-        }
+        onPress={() => navigation.navigate('CharacterDetails', {item, img})}
         highlight={term}
-        img={img}
-        charName={name}
+        {...{name, img}}
       />
     );
   };
@@ -66,7 +50,7 @@ export const Search = ({navigation}) => {
   };
 
   const footerLoader = () => {
-    return isLoading && <LoadingIndicator />;
+    return loading && <LoadingIndicator />;
   };
 
   return (

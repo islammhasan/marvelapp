@@ -1,16 +1,17 @@
-import axios from 'axios';
 import React, {useEffect, useState, useLayoutEffect} from 'react';
 import {View, TouchableOpacity, Image, FlatList, Text} from 'react-native';
+import {useSelector} from 'react-redux';
 import {icons} from '../../assets/icons';
 import {images} from '../../assets/images';
 import {CharacterCard, Container, LoadingIndicator} from '../../components';
+import {useMainFetch} from '../../redux/main';
 import {styles} from './styles';
-import {baseUrl, apikey, hash, ts} from '../../services';
 
 export const Home = ({navigation}) => {
-  const [charList, setCharList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [currentLimit, setCurrentLimit] = useState(10);
+  const {getCharacters} = useMainFetch();
+  const loading = useSelector(state => state.main.loading);
+  const charList = useSelector(state => state.main.characters);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -22,31 +23,18 @@ export const Home = ({navigation}) => {
   }, [navigation]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchCharacter();
   }, [currentLimit]);
 
   const tryAgain = () => {
-    setIsLoading(true);
     fetchCharacter();
   };
 
   const fetchCharacter = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/characters`, {
-        params: {
-          ts,
-          apikey,
-          hash,
-          limit: currentLimit,
-        },
-      });
-      setCharList(response.data?.data?.results);
-      setIsLoading(false);
+      await getCharacters(currentLimit);
     } catch (err) {
       console.log('error==>', err);
-      setIsLoading(false);
-      setCharList([]);
     }
   };
 
@@ -76,21 +64,13 @@ export const Home = ({navigation}) => {
   };
 
   const renderItem = ({item}) => {
-    const {id, name, description} = item;
-    const {path, extension} = item.thumbnail;
+    const {name, thumbnail} = item;
+    const {path, extension} = thumbnail;
     const img = `${path}.${extension}`;
     return (
       <CharacterCard
-        onPress={() =>
-          navigation.navigate('CharacterDetails', {
-            id,
-            name,
-            img,
-            description,
-          })
-        }
-        charName={name}
-        img={img}
+        onPress={() => navigation.navigate('CharacterDetails', {item, img})}
+        {...{name, img}}
       />
     );
   };
@@ -100,18 +80,17 @@ export const Home = ({navigation}) => {
   };
 
   const footerLoader = () => {
-    return isLoading && <LoadingIndicator />;
+    return loading && <LoadingIndicator />;
   };
 
   const loadMore = () => {
     setCurrentLimit(currentLimit + 10);
-    setIsLoading(true);
   };
 
   return (
     <Container statusBarTranslucent>
       <View style={styles.headerExtension}></View>
-      {charList.length < 1 && isLoading == false ? (
+      {charList.length < 1 && loading == false ? (
         <>
           <Text style={styles.errorTxt}>Something went wrong!</Text>
           <TouchableOpacity style={styles.errorBtn} onPress={tryAgain}>

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import {View, Text, Image, ScrollView} from 'react-native';
 import {
@@ -9,23 +8,26 @@ import {
 } from '../../components';
 import {strings} from '../../strings';
 import {styles} from './styles';
-import {baseUrl, apikey, hash, ts} from '../../services/';
+import {useCharacter} from '../../redux/character';
+import {useSelector} from 'react-redux';
 
 export const CharacterDetails = ({navigation, route}) => {
-  const {id, name, img, description} = route.params;
-  const [comicsList, setComicsList] = useState([]);
-  const [eventsList, setEventsList] = useState([]);
-  const [seriesList, setSeriesList] = useState([]);
-  const [storiesList, setStoriesList] = useState([]);
+  const {item, img} = route.params;
+  const {id, name, description} = item;
   const [isLoading, setIsLoading] = useState(false);
   const [comicsLimit, setComicsLimit] = useState(4);
   const [eventsLimit, setEventsLimit] = useState(4);
   const [seriesLimit, setSeriesLimit] = useState(4);
   const [storiesLimit, setStoriesLimit] = useState(4);
-  const [comicsListLoading, setComicsListLoading] = useState(false);
-  const [eventsListLoading, setEventsListLoading] = useState(false);
-  const [seriesListLoading, setSeriesListLoading] = useState(false);
-  const [storiesListLoading, setStoriesListLoading] = useState(false);
+  const {getComics, getEvents, getSeries, getStories} = useCharacter();
+  const comicsLoading = useSelector(state => state.character.comicsLoading);
+  const eventsLoading = useSelector(state => state.character.eventsLoading);
+  const seriesLoading = useSelector(state => state.character.seriesLoading);
+  const storiesLoading = useSelector(state => state.character.storiesLoading);
+  const comicsList = useSelector(state => state.character.comicsList);
+  const eventsList = useSelector(state => state.character.eventsList);
+  const seriesList = useSelector(state => state.character.seriesList);
+  const storiesList = useSelector(state => state.character.storiesList);
 
   useEffect(() => {
     initialFetch();
@@ -58,100 +60,52 @@ export const CharacterDetails = ({navigation, route}) => {
 
   const fetchComics = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/characters/${id}/comics`, {
-        params: {
-          ts,
-          apikey,
-          hash,
-          limit: comicsLimit,
-        },
-      });
-      setComicsList(response.data?.data?.results);
+      await getComics(id, comicsLimit);
       setIsLoading(false);
-      setComicsListLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
-      setComicsListLoading(false);
-      setComicsList([]);
     }
   };
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/characters/${id}/events`, {
-        params: {
-          ts,
-          apikey,
-          hash,
-          limit: eventsLimit,
-        },
-      });
-      setEventsList(response.data?.data?.results);
-      setEventsListLoading(false);
+      await getEvents(id, eventsLimit);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
-      setEventsListLoading(false);
-      setEventsList([]);
     }
   };
 
   const fetchSeries = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/characters/${id}/series`, {
-        params: {
-          ts,
-          apikey,
-          hash,
-          limit: seriesLimit,
-        },
-      });
-      setSeriesList(response.data?.data?.results);
-      setSeriesListLoading(false);
+      await getSeries(id, seriesLimit);
       setIsLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
-      setSeriesListLoading(false);
-      setSeriesList([]);
     }
   };
 
   const fetchStoires = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/characters/${id}/stories`, {
-        params: {
-          ts,
-          apikey,
-          hash,
-          limit: storiesLimit,
-        },
-      });
-      setStoriesList(response.data?.data?.results);
+      await getStories(id, storiesLimit);
       setIsLoading(false);
-      setStoriesListLoading(false);
     } catch (err) {
       console.log('error==>', err);
       setIsLoading(false);
-      setStoriesListLoading(false);
-      setStoriesList([]);
     }
   };
 
-  const updateListLimit = (comics, events, series, stories) => {
+  const updateListLimit = ({comics, events, series, stories}) => {
     if (comics & (comicsList.length > 3)) {
-      setComicsListLoading(true);
       setComicsLimit(comicsLimit + 4);
     } else if (events & (eventsList.length > 3)) {
-      setEventsListLoading(true);
       setEventsLimit(eventsLimit + 4);
     } else if (series & (seriesList.length > 3)) {
-      setSeriesListLoading(true);
       setSeriesLimit(seriesLimit + 4);
     } else if (stories & (storiesList.length > 3)) {
-      setStoriesListLoading(true);
       setStoriesLimit(storiesLimit + 4);
     }
   };
@@ -178,42 +132,40 @@ export const CharacterDetails = ({navigation, route}) => {
         <Text numberOfLines={1} style={styles.descTitleStyle}>
           {strings.descTitle}
         </Text>
-        <Text style={styles.descStyle}>
-          {description ? description : 'No description'}
-        </Text>
-        {isLoading && <LoadingIndicator style={styles.loaderStyle} />}
+        <Text style={styles.descStyle}>{description || 'No description'}</Text>
         {comicsList.length > 0 && (
           <HorizontalList
             sectionTitle={strings.comics}
             data={comicsList}
-            listLoading={comicsListLoading}
-            onEndReached={() => updateListLimit(true, false, false, false)}
+            listLoading={comicsLoading}
+            onEndReached={() => updateListLimit({comics: true})}
           />
         )}
         {eventsList.length > 0 && (
           <HorizontalList
             sectionTitle={strings.events}
             data={eventsList}
-            listLoading={eventsListLoading}
-            onEndReached={() => updateListLimit(false, true, false, false)}
+            listLoading={eventsLoading}
+            onEndReached={() => updateListLimit({events: true})}
           />
         )}
         {seriesList.length > 0 && (
           <HorizontalList
             sectionTitle={strings.series}
             data={seriesList}
-            listLoading={seriesListLoading}
-            onEndReached={() => updateListLimit(false, false, true, false)}
+            listLoading={seriesLoading}
+            onEndReached={() => updateListLimit({series: true})}
           />
         )}
         {storiesList.length > 0 && (
           <HorizontalList
             sectionTitle={strings.stories}
             data={storiesList}
-            listLoading={storiesListLoading}
-            onEndReached={() => updateListLimit(false, false, false, true)}
+            listLoading={storiesLoading}
+            onEndReached={() => updateListLimit({stories: true})}
           />
         )}
+        {isLoading && <LoadingIndicator style={styles.loaderStyle} />}
       </ScrollView>
     </Container>
   );

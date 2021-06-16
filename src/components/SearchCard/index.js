@@ -6,7 +6,7 @@ import {images} from '../../assets/images';
 import {strings} from '../../strings';
 import Highlighter from 'react-native-highlight-words';
 
-export const SearchCard = ({onPress, charName, img, highlight}) => {
+export const SearchCard = ({onPress, name, img, highlight}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -22,7 +22,7 @@ export const SearchCard = ({onPress, charName, img, highlight}) => {
         highlightStyle={{backgroundColor: colors.red}}
         searchWords={[highlight]}
         style={styles.txtStyle}
-        textToHighlight={charName || strings.characterName}
+        textToHighlight={name || strings.characterName}
       />
     </TouchableOpacity>
   );

@@ -5,7 +5,7 @@ import {colors} from '../../assets/colors';
 import {strings} from '../../strings';
 import {images} from '../../assets/images';
 
-export const CharacterCard = ({charName, onPress, img, style}) => {
+export const CharacterCard = ({name, onPress, img, style}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -19,7 +19,7 @@ export const CharacterCard = ({charName, onPress, img, style}) => {
       />
       <View style={styles.titleContainer}>
         <Text numberOfLines={1} style={styles.titleStyle}>
-          {charName || strings.characterName}
+          {name || strings.characterName}
         </Text>
       </View>
     </TouchableOpacity>
