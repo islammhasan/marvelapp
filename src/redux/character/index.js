@@ -15,6 +15,7 @@ export const types = {
   START_STORIES_LOADING: 'START_STORIES_LOADING',
   GET_STORIES_SUCCESS: 'GET_STORIES_SUCCESS',
   GET_STORIES_FAILED: 'GET_STORIES_FAILED',
+  CLEAR_LIST: 'CLEAR_LIST',
 };
 
 export const useCharacter = () => {
@@ -112,7 +113,11 @@ export const useCharacter = () => {
       console.log('error==>', err);
     }
   };
-  return {getComics, getEvents, getSeries, getStories};
+
+  const clearList = () => {
+    dispatch({type: types.CLEAR_LIST});
+  };
+  return {getComics, getEvents, getSeries, getStories, clearList};
 };
 
 const initialState = {
@@ -132,25 +137,23 @@ export default (state = initialState, action) => {
       return {...state, comicsLoading: true};
     case types.GET_COMICS_SUCCESS:
       return {...state, comicsLoading: false, comicsList: action.payload};
-    case types.GET_COMICS_FAILED:
-      return initialState;
     case types.START_EVENTS_LOADING:
       return {...state, eventsLoading: true};
     case types.GET_EVENTS_SUCCESS:
       return {...state, eventsLoading: false, eventsList: action.payload};
-    case types.GET_EVENTS_FAILED:
-      return initialState;
     case types.START_SERIES_LOADING:
       return {...state, seriesLoading: true};
     case types.GET_SERIES_SUCCES:
       return {...state, seriesLoading: false, seriesList: action.payload};
-    case types.GET_SERIES_FAILED:
-      return initialState;
     case types.START_STORIES_LOADING:
       return {...state, storiesLoading: true};
     case types.GET_STORIES_SUCCESS:
       return {...state, storiesLoading: false, storiesList: action.payload};
+    case types.GET_COMICS_FAILED:
+    case types.GET_EVENTS_FAILED:
+    case types.GET_SERIES_FAILED:
     case types.GET_STORIES_FAILED:
+    case types.CLEAR_LIST:
       return initialState;
     default:
       return state;

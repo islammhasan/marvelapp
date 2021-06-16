@@ -2,7 +2,7 @@ import axios from 'axios';
 import {useDispatch} from 'react-redux';
 import {apikey, baseUrl, hash, ts} from '../../services';
 
-const types = {
+export const types = {
   START_CHARACTERS_LOADING: 'START_CHARACTERS_LOADING',
   GET_CHARACTERS_SUCCES: 'GET_CHARACTERS_SUCCES',
   GET_CHARACTERS_FAILED: 'GET_CHARACTERS_FAILED',
@@ -41,24 +41,20 @@ export const useMainFetch = () => {
   const searchCharacters = async (limit, term) => {
     dispatch({type: types.START_SEARCH_LOADING});
     try {
-      if (Boolean(term)) {
-        const response = await axios.get(`${baseUrl}/characters`, {
-          params: {
-            ts,
-            apikey,
-            hash,
-            limit,
-            nameStartsWith: term,
-          },
+      const response = await axios.get(`${baseUrl}/characters`, {
+        params: {
+          ts,
+          apikey,
+          hash,
+          limit,
+          nameStartsWith: term,
+        },
+      });
+      if (response) {
+        return dispatch({
+          type: types.GET_SEARCH_SUCCESS,
+          payload: response.data?.data?.results,
         });
-        if (response) {
-          return dispatch({
-            type: types.GET_SEARCH_SUCCESS,
-            payload: response.data?.data?.results,
-          });
-        } else {
-          dispatch({type: types.GET_SEARCH_FAILED});
-        }
       } else {
         dispatch({type: types.GET_SEARCH_FAILED});
       }
@@ -90,7 +86,7 @@ export default (state = initialState, action) => {
     case types.GET_SEARCH_SUCCESS:
       return {...state, searchLoading: false, searchList: action.payload};
     case types.GET_SEARCH_FAILED:
-      return initialState;
+      return {...state, searchList: []};
     default:
       return state;
   }

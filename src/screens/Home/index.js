@@ -107,7 +107,7 @@ export const Home = ({navigation}) => {
           renderItem={renderItem}
           ListFooterComponent={footerLoader}
           onEndReached={loadMore}
-          onEndReachedThreshold={0}
+          onEndReachedThreshold={0.7}
         />
       )}
     </Container>

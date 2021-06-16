@@ -41,7 +41,7 @@ export const HorizontalList = props => {
         keyExtractor={item => item.id}
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={0.7}
         {...props}
       />
     </>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   listStyle: {
-    paddingStart: scale(20),
+    paddingHorizontal: scale(20),
     marginTop: verticalScale(15),
   },
   separatorStyle: {

@@ -19,7 +19,8 @@ export const CharacterDetails = ({navigation, route}) => {
   const [eventsLimit, setEventsLimit] = useState(4);
   const [seriesLimit, setSeriesLimit] = useState(4);
   const [storiesLimit, setStoriesLimit] = useState(4);
-  const {getComics, getEvents, getSeries, getStories} = useCharacter();
+  const {getComics, getEvents, getSeries, getStories, clearList} =
+    useCharacter();
   const comicsLoading = useSelector(state => state.character.comicsLoading);
   const eventsLoading = useSelector(state => state.character.eventsLoading);
   const seriesLoading = useSelector(state => state.character.seriesLoading);
@@ -31,6 +32,9 @@ export const CharacterDetails = ({navigation, route}) => {
 
   useEffect(() => {
     initialFetch();
+    return () => {
+      clearList();
+    };
   }, []);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, TouchableOpacity, FlatList} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {colors} from '../../assets/colors';
 import {
   Container,
@@ -8,7 +8,7 @@ import {
   SearchCard,
   SearchInput,
 } from '../../components';
-import {useMainFetch} from '../../redux/main';
+import {useMainFetch, types} from '../../redux/main';
 import {styles} from './styles';
 
 export const Search = ({navigation}) => {
@@ -17,6 +17,7 @@ export const Search = ({navigation}) => {
   const {searchCharacters} = useMainFetch();
   const loading = useSelector(state => state.main.searchLoading);
   const result = useSelector(state => state.main.searchList);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchResults();
@@ -26,6 +27,8 @@ export const Search = ({navigation}) => {
     try {
       if (Boolean(term)) {
         await searchCharacters(currentLimit, term);
+      } else {
+        dispatch({type: types.GET_SEARCH_FAILED});
       }
     } catch (err) {
       console.log('error==>', err);
@@ -76,8 +79,10 @@ export const Search = ({navigation}) => {
         renderItem={renderItem}
         ItemSeparatorComponent={itemSeparator}
         ListFooterComponent={footerLoader}
-        onEndReached={() => setCurrentLimit(currentLimit + 10)}
-        onEndReachedThreshold={0}
+        onEndReached={() => {
+          result.length > 9 && setCurrentLimit(currentLimit + 10);
+        }}
+        onEndReachedThreshold={0.7}
       />
     </Container>
   );
